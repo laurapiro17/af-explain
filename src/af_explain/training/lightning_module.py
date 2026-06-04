@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any
 
-import lightning as L
+import lightning as L  # noqa: N812  (Lightning convention)
 import torch
 import torch.nn as nn
 from torchmetrics.classification import (
@@ -37,7 +37,7 @@ class AFClassifier(L.LightningModule):
         weight_decay: float = 1e-4,
         num_classes: int = NUM_CLASSES,
         class_weights: torch.Tensor | None = None,
-        scheduler_T_max: int = 50,
+        scheduler_t_max: int = 50,
     ) -> None:
         super().__init__()
         self.save_hyperparameters(ignore=["class_weights"])
@@ -62,7 +62,9 @@ class AFClassifier(L.LightningModule):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         return self.model(x)
 
-    def _shared_step(self, batch: dict[str, torch.Tensor]) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    def _shared_step(
+        self, batch: dict[str, torch.Tensor]
+    ) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         logits = self(batch["signal"])
         loss = self.loss_fn(logits, batch["label"])
         return loss, logits, batch["label"]
@@ -119,6 +121,6 @@ class AFClassifier(L.LightningModule):
             weight_decay=self.hparams.weight_decay,
         )
         scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(
-            optimizer, T_max=self.hparams.scheduler_T_max
+            optimizer, T_max=self.hparams.scheduler_t_max
         )
         return {"optimizer": optimizer, "lr_scheduler": scheduler}

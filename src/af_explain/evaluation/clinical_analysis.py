@@ -32,16 +32,16 @@ The four analyses
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from itertools import pairwise
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import torch
-import torch.nn.functional as F
+import torch.nn.functional as F  # noqa: N812  (PyTorch convention)
 from sklearn.calibration import calibration_curve
 
 from af_explain.data.dataset import LABEL_NAMES
-
 
 # ─────────────────────────────────────────────────────────────────────────────
 #  THE RESEARCH QUESTION
@@ -155,13 +155,11 @@ class CalibrationReport:
         return pd.DataFrame(rows).to_markdown(index=False, floatfmt=".4f")
 
 
-def expected_calibration_error(
-    probs: np.ndarray, hits: np.ndarray, n_bins: int = 15
-) -> float:
+def expected_calibration_error(probs: np.ndarray, hits: np.ndarray, n_bins: int = 15) -> float:
     """Multiclass-friendly expected calibration error for one class."""
     bin_edges = np.linspace(0, 1, n_bins + 1)
     ece = 0.0
-    for low, high in zip(bin_edges[:-1], bin_edges[1:], strict=True):
+    for low, high in pairwise(bin_edges):
         mask = (probs > low) & (probs <= high)
         if not mask.any():
             continue

@@ -7,6 +7,9 @@ Architecture adapted from:
 
 Notes:
     - Uses 1-D convolutions over time; depth ~18 layers.
+    - Odd kernel size (15 samples ≈ 50 ms @ 300 Hz, ~ one QRS width) so that
+      ``padding = kernel_size // 2`` produces the same output length as the
+      stride-2 shortcut path — avoids off-by-one residual shape mismatches.
     - GroupNorm rather than BatchNorm: works better with the small per-batch
       effective sample size of long 1-D signals on a single GPU.
     - The final ``feature_map`` attribute exposes the last conv activations
@@ -17,13 +20,13 @@ from __future__ import annotations
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional as F  # noqa: N812  (PyTorch convention)
 
 
 def _conv1d_block(
     in_channels: int,
     out_channels: int,
-    kernel_size: int = 16,
+    kernel_size: int = 15,
     stride: int = 1,
     groups_norm: int = 8,
 ) -> nn.Sequential:
@@ -48,7 +51,7 @@ class ResidualBlock1D(nn.Module):
         self,
         in_channels: int,
         out_channels: int,
-        kernel_size: int = 16,
+        kernel_size: int = 15,
         stride: int = 1,
         dropout: float = 0.2,
         groups_norm: int = 8,
@@ -108,7 +111,7 @@ class ResNet1D(nn.Module):
         num_classes: int = 4,
         base_channels: int = 64,
         block_counts: tuple[int, ...] = (2, 2, 2, 2),
-        kernel_size: int = 16,
+        kernel_size: int = 15,
         dropout: float = 0.2,
     ) -> None:
         super().__init__()

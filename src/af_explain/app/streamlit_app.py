@@ -47,9 +47,7 @@ def _read_uploaded(file) -> tuple[np.ndarray, int]:
     if suffix == ".csv":
         arr = np.loadtxt(file, delimiter=",").astype(np.float32).squeeze()
         return arr, DEFAULT_FS
-    raise ValueError(
-        f"Unsupported extension {suffix}. Upload .npy or .csv with a single ECG lead."
-    )
+    raise ValueError(f"Unsupported extension {suffix}. Upload .npy or .csv with a single ECG lead.")
 
 
 def _load_demo_record(record_id: str, root: Path) -> tuple[np.ndarray, int]:
@@ -76,19 +74,23 @@ def _plot_explanation(
         ),
         vertical_spacing=0.07,
     )
-    fig.add_trace(go.Scatter(x=t, y=processed, name="ECG", line=dict(color="black")), row=1, col=1)
+    fig.add_trace(go.Scatter(x=t, y=processed, name="ECG", line={"color": "black"}), row=1, col=1)
     fig.add_trace(
-        go.Scatter(x=t, y=saliency, name="Grad-CAM", line=dict(color="crimson")),
+        go.Scatter(x=t, y=saliency, name="Grad-CAM", line={"color": "crimson"}),
         row=2,
         col=1,
     )
     fig.add_trace(
-        go.Scatter(x=t, y=ig_attr, name="IG", line=dict(color="steelblue")),
+        go.Scatter(x=t, y=ig_attr, name="IG", line={"color": "steelblue"}),
         row=3,
         col=1,
     )
     fig.update_xaxes(title_text="Time (s)", row=3, col=1)
-    fig.update_layout(height=720, showlegend=False, margin=dict(t=60, b=40, l=40, r=20))
+    fig.update_layout(
+        height=720,
+        showlegend=False,
+        margin={"t": 60, "b": 40, "l": 40, "r": 20},
+    )
     return fig
 
 
@@ -125,9 +127,7 @@ def main() -> None:
             raw_signal, fs = _read_uploaded(uploaded)
 
     with demo_tab:
-        demo_root = Path(
-            st.text_input("Demo dataset root", value="data/raw/training2017")
-        )
+        demo_root = Path(st.text_input("Demo dataset root", value="data/raw/training2017"))
         record_id = st.text_input("Record ID (e.g. A00001)", value="A00001")
         if st.button("Load demo record") and demo_root.exists():
             raw_signal, fs = _load_demo_record(record_id, demo_root)
@@ -152,7 +152,9 @@ def main() -> None:
         probs = torch.softmax(logits, dim=1)[0].cpu().numpy()
     pred_idx = int(np.argmax(probs))
 
-    target_idx = pred_idx if target_class_name == "(predicted)" else LABEL_NAMES.index(target_class_name)
+    target_idx = (
+        pred_idx if target_class_name == "(predicted)" else LABEL_NAMES.index(target_class_name)
+    )
 
     cam = make_gradcam(model.model)
     saliency = cam(tensor, target_class=target_idx)

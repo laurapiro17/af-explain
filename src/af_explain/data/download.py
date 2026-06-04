@@ -29,16 +29,14 @@ from rich.progress import (
 
 console = Console()
 
-PHYSIONET_2017_URL = (
-    "https://physionet.org/files/challenge-2017/1.0.0/training2017.zip?download"
-)
+PHYSIONET_2017_URL = "https://physionet.org/files/challenge-2017/1.0.0/training2017.zip?download"
 PHYSIONET_2017_MD5 = "5bc5b9c8b29d4eafad8e1bd5db1e8b6f"  # verify after first download
 ARCHIVE_NAME = "training2017.zip"
 EXTRACTED_DIR = "training2017"
 
 
 def _md5sum(path: Path, block_size: int = 1 << 20) -> str:
-    h = hashlib.md5()  # noqa: S324  (integrity check, not security)
+    h = hashlib.md5()
     with path.open("rb") as f:
         for chunk in iter(lambda: f.read(block_size), b""):
             h.update(chunk)
@@ -87,7 +85,7 @@ def download_physionet2017(
                     progress.update(task, total=total_size)
                 progress.update(task, completed=block_num * block_size)
 
-            urlretrieve(PHYSIONET_2017_URL, archive_path, _hook)  # noqa: S310
+            urlretrieve(PHYSIONET_2017_URL, archive_path, _hook)
 
     if verify_checksum:
         observed = _md5sum(archive_path)

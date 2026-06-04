@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Annotated
 
-import lightning as L
+import lightning as L  # noqa: N812  (Lightning convention)
 import torch
 import typer
 from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint, RichProgressBar
@@ -61,7 +61,7 @@ def train(
         learning_rate=learning_rate,
         weight_decay=weight_decay,
         class_weights=train_ds.class_weights,
-        scheduler_T_max=epochs,
+        scheduler_t_max=epochs,
     )
 
     callbacks = [

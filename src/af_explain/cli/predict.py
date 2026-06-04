@@ -22,8 +22,12 @@ app = typer.Typer(add_completion=False, help="Predict AFib + produce explanation
 def predict(
     checkpoint: Annotated[Path, typer.Option(help="Path to a trained .ckpt")],
     ecg_path: Annotated[Path, typer.Option(help="ECG as .npy (single lead, 1-D)")],
-    output_dir: Annotated[Path, typer.Option(help="Where to save outputs")] = Path("outputs/predict"),
-    target_class: Annotated[int | None, typer.Option(help="Class to explain (default: predicted)")] = None,
+    output_dir: Annotated[Path, typer.Option(help="Where to save outputs")] = Path(
+        "outputs/predict"
+    ),
+    target_class: Annotated[
+        int | None, typer.Option(help="Class to explain (default: predicted)")
+    ] = None,
 ) -> None:
     """Predict and dump probabilities + Grad-CAM + IG arrays to ``output_dir``."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -54,7 +58,9 @@ def predict(
         gradcam=saliency,
         integrated_gradients=ig,
     )
-    typer.echo(f"Prediction: {LABEL_NAMES[pred]}  probs={dict(zip(LABEL_NAMES, probs, strict=True))}")
+    typer.echo(
+        f"Prediction: {LABEL_NAMES[pred]}  probs={dict(zip(LABEL_NAMES, probs, strict=True))}"
+    )
     typer.echo(f"Saved explanation arrays to {output_dir / (ecg_path.stem + '_explanation.npz')}")
 
 

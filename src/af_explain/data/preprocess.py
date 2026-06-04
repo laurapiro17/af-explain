@@ -76,10 +76,7 @@ def segment_signal(
 
     # n < target_length → pad
     pad_total = target_length - n
-    if mode == "random":
-        pad_left = np.random.randint(0, pad_total + 1)
-    else:
-        pad_left = pad_total // 2
+    pad_left = np.random.randint(0, pad_total + 1) if mode == "random" else pad_total // 2
     pad_right = pad_total - pad_left
     padded = np.pad(signal, (pad_left, pad_right), mode="constant").astype(np.float32)
     mask[:pad_left] = 0.0
