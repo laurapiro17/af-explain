@@ -1,0 +1,6 @@
+# The bundled checkpoint is too big for a repo push; HF Spaces handles
+# large files via git-lfs, so we keep it out of the regular .git index.
+model.ckpt
+*.ckpt
+*.pt
+*.pth
