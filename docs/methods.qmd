@@ -36,12 +36,26 @@ Challenge 2017 dataset [@clifford2017af].
 
 # Research question
 
-::: {.callout-note}
-The exact research question is defined in
-`src/af_explain/evaluation/clinical_analysis.py::RESEARCH_QUESTION`.
-Fill it in and re-run `quarto render` to propagate the wording into
-this document.
-:::
+For a 1-D ResNet trained on the PhysioNet/CinC 2017 single-lead ECG
+corpus, does the model
+
+1. **maintain its atrial-fibrillation sensitivity** across stratifying
+   variables such as signal quality and record length;
+2. **produce Grad-CAM and Integrated-Gradients saliency** that overlaps
+   with clinician-annotated regions of interest (absent P waves,
+   irregular RR intervals, fibrillatory baseline); and
+3. **commit errors organisable into a clinically grounded taxonomy of
+   failure modes** (false-negative AFib, atrial flutter mistaken for
+   AFib, noise read as rhythm, low-amplitude AF read as sinus) rather
+   than appearing as undifferentiated noise in a confusion matrix?
+
+Subgroup audit is a prerequisite for FDA/EMA submission of AI-based ECG
+tools; clinician–model concordance is a prerequisite for bedside trust;
+a clinical failure-mode taxonomy is what tells the next researcher where
+to invest data-collection and model-improvement effort.
+
+The canonical source of this text is
+`RESEARCH_QUESTION` in `src/af_explain/evaluation/clinical_analysis.py`.
 
 # Methods
 

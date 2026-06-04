@@ -17,15 +17,38 @@
 
 ## Question
 
-> The exact research question lives in
-> [`src/af_explain/evaluation/clinical_analysis.py`](src/af_explain/evaluation/clinical_analysis.py)
-> as `RESEARCH_QUESTION` — fill it in to claim the framing of the paper draft.
+**Background.** Atrial fibrillation is the most common sustained
+arrhythmia and a leading cause of cardioembolic stroke. Deep-learning
+classifiers now reach cardiologist-level accuracy on single-lead ECG,
+yet three gaps block clinical and regulatory adoption: aggregate metrics
+mask systematic subgroup failures, post-hoc saliency maps are rarely
+audited against the morphological features clinicians actually use, and
+misclassifications are reported as numbers rather than as clinically
+meaningful failure modes.
 
-In broad terms: training a deep network to call AFib on a 30-second
-single-lead ECG is no longer hard. **What still matters is whether the
-model's explanations agree with a clinician's gaze, whether its calibration
-survives noisy real-world recordings, and whether it fails systematically
-on any subgroup.** This repository instruments exactly those four questions.
+**Question.** For a 1-D ResNet trained on the PhysioNet/CinC 2017
+single-lead ECG corpus, does the model
+
+1. **maintain its atrial-fibrillation sensitivity** across stratifying
+   variables such as signal quality and record length;
+2. **produce Grad-CAM and Integrated-Gradients saliency** that overlaps
+   with clinician-annotated regions of interest (absent P waves,
+   irregular RR intervals, fibrillatory baseline); and
+3. **commit errors organisable into a clinically grounded taxonomy of
+   failure modes** (false-negative AFib, atrial flutter mistaken for
+   AFib, noise read as rhythm, low-amplitude AF read as sinus) rather
+   than appearing as undifferentiated noise in a confusion matrix?
+
+**Why this matters.** Subgroup audit is a prerequisite for FDA/EMA
+submission of AI-based ECG tools; clinician–model concordance is a
+prerequisite for bedside trust; a clinical failure-mode taxonomy is what
+tells the next researcher where to invest data-collection and
+model-improvement effort. Together they turn an accurate classifier into
+a deployable one — and the three analyses are far cheaper to produce
+jointly than sequentially.
+
+> Canonical source: `RESEARCH_QUESTION` in
+> [`src/af_explain/evaluation/clinical_analysis.py`](src/af_explain/evaluation/clinical_analysis.py).
 
 ## Contribution
 

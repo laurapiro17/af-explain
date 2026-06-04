@@ -50,23 +50,40 @@ from af_explain.data.dataset import LABEL_NAMES
 #  It frames the entire repository — be specific, be honest about scope.
 # ─────────────────────────────────────────────────────────────────────────────
 RESEARCH_QUESTION: str = """\
-TODO (Laura): Write the research question in 5-10 lines.
+Background:
+    Atrial fibrillation is the most common sustained arrhythmia and a
+    leading cause of cardioembolic stroke. Deep-learning classifiers now
+    reach cardiologist-level accuracy on single-lead ECG, yet three gaps
+    block clinical and regulatory adoption: (i) aggregate metrics mask
+    systematic subgroup failures, (ii) post-hoc saliency maps are rarely
+    audited against the morphological features clinicians actually use,
+    and (iii) misclassifications are reported as numbers rather than as
+    clinically meaningful failure modes.
 
-Template to fill in:
+Question:
+    For a 1-D ResNet trained on the PhysioNet/CinC 2017 single-lead ECG
+    corpus, does the model
+        (1) maintain its atrial-fibrillation sensitivity across
+            stratifying variables such as signal quality and record
+            length,
+        (2) produce Grad-CAM and Integrated-Gradients saliency that
+            overlaps with clinician-annotated regions of interest
+            (absent P waves, irregular RR intervals, fibrillatory
+            baseline), and
+        (3) commit errors that can be organised into a clinically
+            grounded taxonomy of failure modes (false-negative AFib,
+            atrial flutter mistaken for AFib, noise read as rhythm,
+            low-amplitude AF read as sinus) rather than appearing
+            as undifferentiated noise in a confusion matrix?
 
-    Background: Atrial fibrillation (AFib) is the most common sustained
-    arrhythmia and a leading cause of stroke. Deep learning classifiers
-    achieve cardiologist-level performance on single-lead ECG, but
-    **<what gap do you target?>**.
-
-    Question: Does a 1-D ResNet trained on PhysioNet/CinC 2017 produce
-    explanations that **<concordant with / robust across / clinically
-    interpretable for>** **<which subgroup or scenario?>** ?
-
-    Why this matters: **<one sentence on clinical / regulatory relevance>**.
-
-Replace each `<...>` with one concrete sentence in your own voice.
-This text is rendered verbatim in the README and the Quarto paper draft.
+Why this matters:
+    Subgroup audit is a prerequisite for FDA/EMA submission of AI-based
+    ECG tools; clinician-model concordance is a prerequisite for
+    bedside trust; a clinical failure-mode taxonomy is what tells the
+    next researcher where to invest data-collection and model-improvement
+    effort. Together they turn an accurate classifier into a deployable
+    one — and the three analyses are far cheaper to produce jointly than
+    sequentially.
 """
 
 
