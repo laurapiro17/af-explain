@@ -1,4 +1,4 @@
-"""1D ResNet for single-lead ECG classification.
+"""1D ResNet for single-lead ECG classification (≈ 18.5 M params, 74 MB).
 
 Architecture adapted from:
     Hannun AY, Rajpurkar P, et al. Cardiologist-level arrhythmia detection and

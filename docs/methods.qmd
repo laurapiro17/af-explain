@@ -77,8 +77,9 @@ AFib, Other rhythm, or Noisy. We split stratified 70/15/15 with seed 42.
 
 ## Model
 
-A 1-D ResNet with 4 stages of 2 residual blocks each (≈ 3 M parameters),
-kernel size 15 (≈ 50 ms ≈ one QRS width at 300 Hz; odd for shape-safe stride-2), GroupNorm
+A 1-D ResNet with 4 stages of 2 residual blocks each (≈ 18.5 M parameters,
+74 MB), kernel size 15 (≈ 50 ms ≈ one QRS width at 300 Hz; odd for
+shape-safe stride-2), GroupNorm
 (more stable than BatchNorm for long 1-D signals at small per-GPU batch
 sizes), and dropout 0.2 inside residual blocks. The architecture follows
 [@hannun2019cardiologist].

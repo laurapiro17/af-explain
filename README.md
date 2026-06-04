@@ -86,7 +86,7 @@ Download with `./scripts/download_data.sh` (≈ 200 MB).
 raw ECG ─► bandpass 0.5-40 Hz ─► z-score ─► segment 30 s @ 300 Hz
                                                       │
                                                       ▼
-                                           1-D ResNet (≈ 3 M params)
+                                           1-D ResNet (≈ 18.5 M params)
                                                       │
                             ┌─────────────────────────┼─────────────────────────┐
                             ▼                         ▼                         ▼
