@@ -1,0 +1,135 @@
+---
+title: "Explainable Atrial Fibrillation Detection on Single-Lead ECG"
+subtitle: "Methods, clinical analyses, and reproducibility notes"
+author:
+  - name: Laura Piñero Roig
+    affiliation: Universitat de Barcelona, Facultat de Medicina
+    orcid: 0009-0008-3390-4029
+date: today
+format:
+  html:
+    toc: true
+    code-fold: true
+  pdf:
+    documentclass: article
+    geometry: margin=1in
+    number-sections: true
+bibliography: references.bib
+---
+
+# Background
+
+Atrial fibrillation (AFib) is the most common sustained arrhythmia and a
+leading cause of cardioembolic stroke. Single-lead ECG screening — now
+embedded in consumer wearables — has driven a new generation of deep
+learning classifiers that match cardiologist-level performance on short
+recordings [@hannun2019cardiologist]. Two open problems remain before
+such models are clinically deployable:
+
+1. **Explainability.** Models must justify their predictions in a way
+   that a clinician can audit at the bedside.
+2. **Failure-mode characterisation.** Aggregate metrics hide systematic
+   errors on subgroups that a clinician cares about.
+
+This study addresses both, on the publicly available PhysioNet/CinC
+Challenge 2017 dataset [@clifford2017af].
+
+# Research question
+
+::: {.callout-note}
+The exact research question is defined in
+`src/af_explain/evaluation/clinical_analysis.py::RESEARCH_QUESTION`.
+Fill it in and re-run `quarto render` to propagate the wording into
+this document.
+:::
+
+# Methods
+
+## Data
+
+PhysioNet/CinC Challenge 2017 training set: 8,528 single-lead ECG
+recordings, sampled at 300 Hz, 9–60 s long, labelled as Normal,
+AFib, Other rhythm, or Noisy. We split stratified 70/15/15 with seed 42.
+
+## Preprocessing
+
+- Zero-phase Butterworth bandpass filter (0.5–40 Hz, order 4) to remove
+  baseline wander and high-frequency noise while preserving P, QRS, and T
+  morphology.
+- Per-record z-score normalisation (mean 0, std 1).
+- Fixed-length segmentation to 30 s (9,000 samples). Shorter records are
+  symmetrically zero-padded with a mask; longer records are centre-cropped
+  (random crop during training).
+
+## Model
+
+A 1-D ResNet with 4 stages of 2 residual blocks each (≈ 3 M parameters),
+kernel size 16 (≈ 50 ms ≈ one QRS width at 300 Hz), GroupNorm
+(more stable than BatchNorm for long 1-D signals at small per-GPU batch
+sizes), and dropout 0.2 inside residual blocks. The architecture follows
+[@hannun2019cardiologist].
+
+## Training
+
+- AdamW, learning rate 1e-3, weight decay 1e-4, cosine annealing.
+- Class-weighted cross-entropy (inverse frequency).
+- Gradient clipping at 1.0.
+- Up to 50 epochs, early stopping on validation macro-F1 (patience 10).
+- `lightning.Trainer(deterministic=True)`, seed 42.
+
+## Explainability
+
+- **Grad-CAM-1D** [@selvaraju2017gradcam]: backprop the target-class
+  logit, weight last-stage activations by GAP-pooled gradients, ReLU,
+  upsample linearly to input length.
+- **Integrated Gradients** [@sundararajan2017axiomatic]: 50-step Riemann
+  sum from a zero baseline to the input, attributions normalised to
+  $[-1, 1]$ for plotting.
+
+## Clinical analyses
+
+Four reports are computed on the held-out test set; see
+`evaluation/clinical_analysis.py`:
+
+1. **Subgroup robustness.** AFib sensitivity / specificity stratified by
+   record-level metadata (signal quality bin, length).
+2. **Calibration.** Per-class expected calibration error (ECE) with 15
+   bins, reliability diagrams, and a single-parameter temperature
+   scaling fit [@guo2017calibration].
+3. **Failure-mode taxonomy.** Misclassified records bucketed into
+   clinically meaningful categories (false-negative AFib, flutter mistaken
+   for AFib, noise-to-rhythm, etc.).
+4. **Clinician–model concordance.** For records with expert annotations
+   of regions of interest (P waves, RR irregularity windows), we
+   compute IoU between Grad-CAM saliency masks and ROI masks plus the
+   fraction of top-k saliency peaks lying inside any ROI.
+
+# Results
+
+::: {.callout-note}
+Pending the first training run.
+:::
+
+# Discussion
+
+::: {.callout-note}
+Pending results.
+:::
+
+# Reproducibility
+
+```
+git clone https://github.com/laurapiro17/af-explain
+cd af-explain
+uv sync --all-extras --dev
+./scripts/download_data.sh
+af-train --epochs 50 --seed 42
+```
+
+All hyperparameters are persisted in the Lightning checkpoint. CI runs the
+test suite on every push.
+
+# References {.unnumbered}
+
+::: {#refs}
+:::

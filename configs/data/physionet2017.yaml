@@ -1,0 +1,10 @@
+# PhysioNet/CinC Challenge 2017 — default data config.
+
+name: physionet2017
+root: data/raw/training2017
+target_length: 9000      # 30 s @ 300 Hz
+sample_rate: 300
+num_classes: 4
+class_names: [Normal, AFib, Other, Noisy]
+split_ratios: [0.7, 0.15, 0.15]
+split_seed: 42

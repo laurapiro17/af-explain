@@ -1,0 +1,8 @@
+# 1-D ResNet-18 default model config.
+
+name: resnet18_1d
+num_classes: 4
+base_channels: 64
+block_counts: [2, 2, 2, 2]
+kernel_size: 16
+dropout: 0.2

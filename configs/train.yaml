@@ -1,0 +1,17 @@
+# Default Hydra training config.
+# Override on the command line: af-train --epochs 100 --seed 7
+
+defaults:
+  - data: physionet2017
+  - model: resnet18_1d
+  - _self_
+
+seed: 42
+epochs: 50
+batch_size: 32
+num_workers: 4
+learning_rate: 1.0e-3
+weight_decay: 1.0e-4
+
+output_dir: outputs
+fast_dev_run: false

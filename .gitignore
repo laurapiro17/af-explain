@@ -1,0 +1,76 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+*.egg
+.eggs/
+
+# Environments
+.venv/
+venv/
+env/
+.env
+.envrc
+
+# uv
+.uv-cache/
+
+# Testing
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+.tox/
+.hypothesis/
+
+# Type checking
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+*.ipynb_meta
+
+# Data + checkpoints (heavy, never commit)
+data/raw/
+data/processed/
+data/interim/
+data/external/
+!data/.gitkeep
+models/*.ckpt
+models/*.pt
+models/*.pth
+models/*.onnx
+!models/.gitkeep
+lightning_logs/
+wandb/
+mlruns/
+outputs/
+multirun/
+
+# OS / editor
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*~
+
+# Quarto
+/.quarto/
+_site/
+docs/_freeze/
+
+# Streamlit
+.streamlit/secrets.toml
+
+# HuggingFace
+.cache/huggingface/
